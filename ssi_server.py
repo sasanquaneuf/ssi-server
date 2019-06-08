@@ -31,6 +31,7 @@ class SSIRequestHandler(SimpleHTTPRequestHandler):
   The key bit is translate_path, which intercepts requests and serves them
   using a temporary file which inlines the #includes.
   """
+  base = '/' + os.getcwd()
 
   def __init__(self, request, client_address, server):
     self.temp_files = []
@@ -54,7 +55,7 @@ class SSIRequestHandler(SimpleHTTPRequestHandler):
           break
 
     if (fs_path.endswith('.html') or fs_path.endswith(".shtml")) and os.path.exists(fs_path):
-      content = ssi.InlineIncludes(fs_path, path)
+      content = ssi.InlineIncludes(fs_path, path, self.base)
       fs_path = self.create_temp_file(fs_path, content)
     return fs_path
 
